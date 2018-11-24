@@ -1,0 +1,2025 @@
+[
+    {
+        "id": "2cc0068.98f53fa",
+        "type": "tab",
+        "label": "RFLink",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "29704e81.221152",
+        "type": "debug",
+        "z": "2cc0068.98f53fa",
+        "name": "Raw messages",
+        "active": false,
+        "console": "false",
+        "complete": "payload",
+        "x": 360,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "cffcc8ee.b721e8",
+        "type": "comment",
+        "z": "2cc0068.98f53fa",
+        "name": "Examples",
+        "info": "20;B7;Digitech;ID=01bc;TEMP=0060;BAT=OK;\n20;B8;Prologue;ID=9722;TEMP=00e3;HUM=10;\n20;B9;Oregon TempHygro;ID=928F5;TEMP=00d1;HUM=56;HSTATUS=1;BAT=OK;\n20;BA;Tunex;ID=7B02;TEMP=0000;HUM=99;BAT=OK;\n20;BB;Oregon TempHygro;ID=528F1;TEMP=00c6;HUM=59;HSTATUS=0;BAT=OK;\n20;BC;AlectoV3;ID=3099;TEMP=00b3;HUM=61;BAT=OK;\n20;BD;Prologue;ID=9722;TEMP=00e3;HUM=10;\n20;BE;Oregon TempHygro;ID=528F1;TEMP=00c6;HUM=59;HSTATUS=0;BAT=OK;\n20;BF;Prologue;ID=9722;TEMP=00e3;HUM=10;\n20;C0;AlectoV3;ID=3099;TEMP=00b3;HUM=61;BAT=OK;\n20;C1;Tunex;ID=7B02;TEMP=0000;HUM=99;BAT=OK;\n20;C2;Prologue;ID=9722;TEMP=00e3;HUM=10;\n20;C3;AlectoV3;ID=3099;TEMP=00b4;HUM=61;BAT=OK;\n20;C4;Oregon TempHygro;ID=928F5;TEMP=00d1;HUM=56;HSTATUS=1;BAT=OK;\n20;C5;Digitech;ID=01bc;TEMP=0060;BAT=OK;\n20;C6;Tunex;ID=7B02;TEMP=0000;HUM=99;BAT=OK;\n20;C7;AlectoV3;ID=3099;TEMP=00b3;HUM=61;BAT=OK;\n20;C8;Prologue;ID=9722;TEMP=00e2;HUM=10;\n20;C9;AlectoV3;ID=3099;TEMP=00b4;HUM=61;BAT=OK;\n20;CA;Tunex;ID=7B02;TEMP=0000;HUM=99;BAT=OK;\n20;CB;Prologue;ID=9722;TEMP=00e2;HUM=10;\n20;CC;AlectoV3;ID=3099;TEMP=00b3;HUM=61;BAT=OK;\n20;CD;Doorbell;ID=99ff;SWITCH=1;CMD=ON;CHIME=01;\n20;CE;Doorbell;ID=99ff;SWITCH=1;CMD=ON;CHIME=01;\n20;CF;Doorbell;ID=99ff;SWITCH=1;CMD=ON;CHIME=01;\n20;D0;Prologue;ID=9722;TEMP=00e2;HUM=10;\n20;D1;Doorbell;ID=99ff;SWITCH=1;CMD=ON;CHIME=01;\n20;D2;Doorbell;ID=99ff;SWITCH=1;CMD=ON;CHIME=01;\n20;D3;Tunex;ID=7B02;TEMP=0000;HUM=99;BAT=OK;\n20;D4;AlectoV3;ID=3099;TEMP=00b4;HUM=61;BAT=OK;\n20;D5;Oregon TempHygro;ID=928F5;TEMP=00d1;HUM=56;HSTATUS=1;BAT=OK;\n20;D6;Prologue;ID=9722;TEMP=00e2;HUM=10;\n20;D7;Digitech;ID=01bc;TEMP=0060;BAT=OK;\n20;D8;Tunex;ID=7B02;TEMP=0000;HUM=99;BAT=OK;\n20;D9;AlectoV3;ID=3099;TEMP=00b3;HUM=61;BAT=OK;\n20;DA;Prologue;ID=9722;TEMP=00e2;HUM=10;\n20;DB;AlectoV3;ID=3099;TEMP=00b4;HUM=61;BAT=OK;\n20;DC;Tunex;ID=7B02;TEMP=0001;HUM=99;BAT=OK;\n20;DD;Prologue;ID=9722;TEMP=00e2;HUM=10;\n20;DE;AlectoV3;ID=3099;TEMP=00b3;HUM=61;BAT=OK;\n20;DF;Tunex;ID=7B02;TEMP=0001;HUM=99;BAT=OK;\n20;E0;Oregon TempHygro;ID=928F5;TEMP=00d1;HUM=56;HSTATUS=1;BAT=OK;\n20;E1;AlectoV3;ID=3099;TEMP=00b3;HUM=61;BAT=OK;\n20;E2;Prologue;ID=9722;TEMP=00e2;HUM=10;\n",
+        "x": 90,
+        "y": 31,
+        "wires": []
+    },
+    {
+        "id": "90fc5db3.57808",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "Parse message",
+        "func": "var msg433 = {};\nmsg.payload = msg.payload.replace(/(\\r\\n|\\n|\\r)/gm,\"\");\nvar parts433 = msg.payload.split(\";\");\n\nmsg433.p1 = parts433[0];\nmsg433.p2 = parts433[1];\nmsg433.name = parts433[2];\nfor (var i=3; i<parts433.length; i++) {\n    var keyvalue = parts433[i].split(\"=\");\n    if (keyvalue.length===2) {\n        msg433[keyvalue[0]] = keyvalue[1];\n    }\n}\n\nmsg.msg433 = msg433;\nmsg.topic=\"rflink\";\n\nreturn msg;\n\n/*\n\n// So firstly a generic means of getting incoming items into an object\n\nvar the433 = {};\nmsg.payload = msg.payload.replace(/(\\r\\n|\\n|\\r)/gm,\"\");\nnode.warn(msg.payload);\nvar parts433 = msg.payload.split(\";\");\n\nthe433.p1 = parts433[0];\nthe433.p2 = parts433[1];\nthe433.name = parts433[2];\n\nvar a = 3;\nwhile (a < parts433.length) {\n    var bits433 = parts433[a].split(\"=\");\n    switch (bits433[0]) {\n        case \"ID\": the433.id = bits433[1]; break;\n        case \"SWITCH\": the433.switch = bits433[1]; break;\n        case \"CMD\": the433.cmd = bits433[1]; break;\n        case \"SET_LEVEL\": the433.set_level = parseInt(bits433[1], 10); break;\n        case \"TEMP\": the433.temp = parseInt(bits433[1], 16) / 10; break;\n        case \"HUM\": the433.hum = parseInt(bits433[1], 10); break;\n        case \"BARO\": the433.baro = parseInt(bits433[1], 16); break;\n        case \"HSTATUS\": the433.hstatus = parseInt(bits433[1], 10); break;\n        case \"BFORECAST\": the433.bforecast = parseInt(bits433[1], 10); break;\n        case \"UV\": the433.uv = parseInt(bits433[1], 16); break;\n        case \"LUX\": the433.lux = parseInt(bits433[1], 16); break;\n        case \"BAT\": the433.bat = bits433[1]; break;\n        case \"RAIN\": the433.rain = parseInt(bits433[1], 16) / 10; break;\n        case \"RAIN\": the433.rainrate = parseInt(bits433[1], 16) / 10; break;\n        case \"WINSP\": the433.winsp = parseInt(bits433[1], 16) / 10; break;\n        case \"AWINSP\": the433.awinsp = parseInt(bits433[1], 16) / 10; break;\n        case \"WINGS\": the433.wings = parseInt(bits433[1], 16); break;\n        case \"WINDIR\": the433.windir = parseInt(bits433[1], 10); break;\n        case \"WINCHL\": the433.winchl = parseInt(bits433[1], 16); break;\n        case \"WINTMP\": the433.wintmp = parseInt(bits433[1], 16); break;\n        case \"CHIME\": the433.chime = parseInt(bits433[1], 10); break;\n        case \"SMOKEALERT\": the433.smokealert = bits433[1]; break;\n        case \"PIR\": the433.pir = bits433[1]; break;\n        case \"CO2\": the433.co2 = parseInt(bits433[1], 10); break;\n        case \"SOUND\": the433.sound = parseInt(bits433[1], 10); break;\n        case \"KWATT\": the433.kwatt = parseInt(bits433[1], 16); break;\n        case \"WATT\": the433.watt = parseInt(bits433[1], 16); break;\n        case \"CURRENT\": the433.current = parseInt(bits433[1], 10); break;\n        case \"CURRENT2\": the433.current2 = parseInt(bits433[1], 10); break;\n        case \"CURRENT3\": the433.current3 = parseInt(bits433[1], 10); break;\n        case \"DIST\": the433.dist = parseInt(bits433[1], 10); break;\n        case \"METER\": the433.meter = parseInt(bits433[1], 10); break;\n        case \"VOLT\": the433.volt = parseInt(bits433[1], 10); break;\n        case \"RGBW\": the433.rgbc = parseInt(bits433[1].substring(0, 2), 16);\n            the433.rgbw = parseInt(bits433[1].substring(2, 4), 16); break;\n    }\n    a++;\n}\n\n// SO - the above is general... here is my specific setup for temporarily displaying\n// the Acurite info\nif ((the433.p1 == \"20\") && (the433.name == \"Acurite\") && (the433.id == \"c826\")) {\n    if (typeof the433.temp !== 'undefined') temp = the433.temp;\n    if (typeof the433.hum !== 'undefined') hum = the433.hum;\n    if (typeof the433.bat !== 'undefined') bat = the433.bat;\n    if (typeof the433.rain !== 'undefined') rain = the433.rain;\n    if (typeof the433.winsp !== 'undefined') winsp = the433.winsp;\n    if (typeof the433.windir !== 'undefined') windir = the433.windir;\n\n    node.warn(\"Temperature: \" + temp + \"c\");\n    node.warn(\"Humidity: \" + hum + \"%\");\n    node.warn(\"Battery: \" + bat);\n    node.warn(\"Rain: \" + rain + \"mm\");\n    node.warn(\"Wind Speed: \" + winsp + \"km/h\");\n    node.warn(\"Wind Dir: \" + (windir * 22.5) + \" degrees\");\n}\n\n*/",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 471,
+        "y": 96,
+        "wires": [
+            [
+                "f39f2407.6789a8",
+                "593aa2d2.6c940c"
+            ]
+        ]
+    },
+    {
+        "id": "85fb8e77.7ac45",
+        "type": "debug",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "true",
+        "x": 2971.000198364258,
+        "y": 63.99999976158142,
+        "wires": []
+    },
+    {
+        "id": "f39f2407.6789a8",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "TEMP conversion",
+        "func": "if (msg.msg433.TEMP!==undefined) {\n    if (parseInt(msg.msg433.TEMP, 16) >= 0x8000) {\n        msg.msg433.TEMP = (parseInt(msg.msg433.TEMP, 16) & 0x7FFF) / 10 * -1;\n    } else {\n        msg.msg433.TEMP = parseInt(msg.msg433.TEMP, 16) / 10;\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 672,
+        "y": 97,
+        "wires": [
+            [
+                "2213c86f.b406d8"
+            ]
+        ]
+    },
+    {
+        "id": "2213c86f.b406d8",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "HUM conversion",
+        "func": "if (msg.msg433.HUM!==undefined) {\n    msg.msg433.HUM = parseInt(msg.msg433.HUM, 10);\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 881,
+        "y": 103,
+        "wires": [
+            [
+                "6bc970.9a92f69"
+            ]
+        ]
+    },
+    {
+        "id": "6bc970.9a92f69",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "ID conversion",
+        "func": "if (msg.msg433.ID!==undefined) {\n    msg.msg433.ID = parseInt(msg.msg433.ID, 16);\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1118,
+        "y": 97,
+        "wires": [
+            [
+                "4aaa9d2a.bbfc84"
+            ]
+        ]
+    },
+    {
+        "id": "4aaa9d2a.bbfc84",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "RAIN conversion",
+        "func": "var global_name = \"rainstat\";   // Name of the global variable\n\nvar rainstat = global.get(global_name);\n\nif (msg.msg433.RAIN!==undefined) {\n    msg.msg433.RAIN = parseInt(msg.msg433.RAIN, 16) /10;\n}\nnode.status({fill:\"blue\",shape:\"ring\",text: msg.msg433.RAIN });\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1323,
+        "y": 99,
+        "wires": [
+            [
+                "e55dfdc0.719dc"
+            ]
+        ]
+    },
+    {
+        "id": "e55dfdc0.719dc",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "WINSP conversion",
+        "func": "if (msg.msg433.WINSP!==undefined) {\n    msg.msg433.WINSP = parseInt(msg.msg433.WINSP, 16) /10;\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1555,
+        "y": 96,
+        "wires": [
+            [
+                "e997979b.f619c8"
+            ]
+        ]
+    },
+    {
+        "id": "e997979b.f619c8",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "WINGS conversion",
+        "func": "if (msg.msg433.WINGS!==undefined) {\n    msg.msg433.WINGS  = parseInt(msg.msg433.WINGS , 16)/10;\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1786,
+        "y": 95,
+        "wires": [
+            [
+                "ee3698b8.4a3348"
+            ]
+        ]
+    },
+    {
+        "id": "9dba5429.870d18",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "SWITCH conversion",
+        "func": "if (msg.msg433.SWITCH !==undefined) {\n    msg.msg433.SWITCH   = parseInt(msg.msg433.SWITCH  , 16);\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2262,
+        "y": 94,
+        "wires": [
+            [
+                "ef06b873.1a97b8"
+            ]
+        ]
+    },
+    {
+        "id": "ef06b873.1a97b8",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "CHIME conversion",
+        "func": "if (msg.msg433.CHIME  !==undefined) {\n    msg.msg433.CHIME    = parseInt(msg.msg433.CHIME   , 16);\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2504,
+        "y": 92,
+        "wires": [
+            [
+                "a2f0d98c.420d78"
+            ]
+        ]
+    },
+    {
+        "id": "d532090.3c610f8",
+        "type": "switch",
+        "z": "2cc0068.98f53fa",
+        "name": "Select device",
+        "property": "msg433.ID",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "67",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "38690",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "19458",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "39423",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "838656",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 6,
+        "x": 150,
+        "y": 220,
+        "wires": [
+            [
+                "9437a2e8.fcd53",
+                "4dcd247b.4778ac",
+                "2783c72c.601d18",
+                "ee50606c.73f2e",
+                "d331a7f0.31b5b8",
+                "e07f648c.03c8f8",
+                "da100e1d.ab239",
+                "94da8583.fbb448",
+                "a51b3d86.29f31",
+                "4b4b598c.dc9408"
+            ],
+            [
+                "c2e0941c.2e8548",
+                "3e3b4bac.68e944",
+                "52dd2c55.e14974",
+                "7479ec2b.c4d9f4",
+                "436009c0.5c24d8"
+            ],
+            [
+                "18407ebb.994291",
+                "d91663ea.b2654",
+                "7b1fe073.9c8f2",
+                "b63814c2.253ba8"
+            ],
+            [
+                "e0d52cc2.ca689",
+                "eaf14c8b.31b39",
+                "42a749c0.b38ed8"
+            ],
+            [
+                "42a749c0.b38ed8",
+                "e0d52cc2.ca689",
+                "eaf14c8b.31b39"
+            ],
+            [
+                "7e1b4504.9fbf9c"
+            ]
+        ],
+        "outputLabels": [
+            "Weather Station",
+            "Digoo RS8 Temp Sensor",
+            "Digoo Weather Station",
+            "Door bell (Door Bell)",
+            "Door bell (Eurodomest)",
+            "Unhandled"
+        ]
+    },
+    {
+        "id": "9437a2e8.fcd53",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "aecfa21b.54e54",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Name",
+        "format": "{{msg.msg433.name}}",
+        "layout": "row-spread",
+        "x": 670,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "4dcd247b.4778ac",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "aecfa21b.54e54",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Temperature",
+        "format": "{{msg.msg433.TEMP}} &deg;C",
+        "layout": "row-spread",
+        "x": 690,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "2783c72c.601d18",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "aecfa21b.54e54",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Humidity",
+        "format": "{{msg.msg433.HUM}} %",
+        "layout": "row-spread",
+        "x": 680,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "ee50606c.73f2e",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "aecfa21b.54e54",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Wind Speed",
+        "format": "{{msg.msg433.WINSP}} km/h",
+        "layout": "row-spread",
+        "x": 688,
+        "y": 365,
+        "wires": []
+    },
+    {
+        "id": "d331a7f0.31b5b8",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "aecfa21b.54e54",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Wind Gust",
+        "format": "{{msg.msg433.WINGS}} km/h",
+        "layout": "row-spread",
+        "x": 690,
+        "y": 404,
+        "wires": []
+    },
+    {
+        "id": "e07f648c.03c8f8",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "aecfa21b.54e54",
+        "order": 13,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Battery",
+        "format": "{{msg.msg433.BAT}}",
+        "layout": "row-spread",
+        "x": 679,
+        "y": 491,
+        "wires": []
+    },
+    {
+        "id": "c2e0941c.2e8548",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "8244d0b7.96183",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Name",
+        "format": "{{msg.msg433.name}}",
+        "layout": "row-spread",
+        "x": 650,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "3e3b4bac.68e944",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "8244d0b7.96183",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Temperature",
+        "format": "{{msg.msg433.TEMP}} &deg;C",
+        "layout": "row-spread",
+        "x": 670,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "52dd2c55.e14974",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "8244d0b7.96183",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Humidity",
+        "format": "{{msg.msg433.HUM}} %",
+        "layout": "row-spread",
+        "x": 660,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "18407ebb.994291",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "7d47224d.6e4e4c",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Name",
+        "format": "{{msg.msg433.name}}",
+        "layout": "row-spread",
+        "x": 650,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "d91663ea.b2654",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "7d47224d.6e4e4c",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Temperature",
+        "format": "{{msg.msg433.TEMP}} &deg;C",
+        "layout": "row-spread",
+        "x": 670,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "7b1fe073.9c8f2",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "7d47224d.6e4e4c",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Humidity",
+        "format": "{{msg.msg433.HUM}} %",
+        "layout": "row-spread",
+        "x": 660,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "7479ec2b.c4d9f4",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "8244d0b7.96183",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Battery",
+        "format": "{{msg.msg433.BAT}}",
+        "layout": "row-spread",
+        "x": 660,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "7e1b4504.9fbf9c",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "New devices",
+        "func": "// Get the previously stored commands\nvar temp = context.get(\"commands\");\nif (temp===undefined) {\n    temp = [];\n}\n\nif (msg.topic===\"--ClearList--\") {\n    // Clear the current list\n    temp = [];\n} else {\n    // Add the new one \n    var found = false;\n    for (var i=0; i<temp.length; i++) {\n        if (temp[i].id===msg.msg433.ID) {\n            // device already registered, update the existing entry\n            found = true;\n            temp[i].name = msg.msg433.name;\n            temp[i].full = msg.payload;\n        }\n    }\n    if (!found) {\n        // this is a new device, add to the list\n        temp.push({id: msg.msg433.ID, name: msg.msg433.name, full: msg.payload});\n    }\n}\ncontext.set(\"commands\",temp);\n\n\n//Format the output\nmsg.payload = \"\";\nfor (var i=0; i<temp.length; i++) {\n    msg.payload += \"ID=\"+temp[i].id +\" | Name=\"+temp[i].name+\" | Full=\"+temp[i].full + \"<br/>\";\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 430,
+        "y": 1360,
+        "wires": [
+            [
+                "93b14ef3.6476f"
+            ]
+        ]
+    },
+    {
+        "id": "93b14ef3.6476f",
+        "type": "ui_template",
+        "z": "2cc0068.98f53fa",
+        "group": "32201797.8d2168",
+        "name": "Log output",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "format": "<div ng-bind-html=\"msg.payload\" height=\"600\" style=\"height: 600px;\"><br/></div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "templateScope": "local",
+        "x": 890,
+        "y": 1360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "786156ec.96b628",
+        "type": "ui_button",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "group": "32201797.8d2168",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Clear List",
+        "color": "",
+        "bgcolor": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "--ClearList--",
+        "x": 160,
+        "y": 1360,
+        "wires": [
+            [
+                "7e1b4504.9fbf9c"
+            ]
+        ]
+    },
+    {
+        "id": "da100e1d.ab239",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "Last Update",
+        "func": "var temp = context.get(\"last_update\");\nvar current = new Date();\n\nif (msg.topic!==\"update\") {\n    \n    if (temp!== undefined && temp!==null) {\n        msg.payload = current.getTime() - temp;\n        context.set(\"last_update\",current.getTime());\n    } else {\n        msg.payload = \"\";\n        context.set(\"last_update\",current.getTime());\n    }    \n    \n    // Update the status with current timestamp\n    var now = new Date();\n    var yyyy = now.getFullYear();\n    var mm = now.getMonth() < 9 ? \"0\" + (now.getMonth() + 1) : (now.getMonth() + 1); // getMonth() is zero-based\n    var dd  = now.getDate() < 10 ? \"0\" + now.getDate() : now.getDate();\n    var hh = now.getHours() < 10 ? \"0\" + now.getHours() : now.getHours();\n    var mmm  = now.getMinutes() < 10 ? \"0\" + now.getMinutes() : now.getMinutes();\n    var ss  = now.getSeconds() < 10 ? \"0\" + now.getSeconds() : now.getSeconds();\n    node.status({fill:\"blue\",shape:\"ring\",text:\"Last update: \"+dd + \".\" + mm + \".\" + yyyy + \" \" + hh + \":\" + mmm + \":\" + ss});\n    \n    msg.formattedtime = dd + \".\" + mm + \".\" + yyyy + \" \" + hh + \":\" + mmm + \":\" + ss;\n}\n\nif (temp!==undefined) {\n    current = current - temp;\n    current = Math.floor(current/1000);\n    msg.secsincelast = current;\n    var minute = Math.floor(current/60);\n    var hour = Math.floor(minute/60);\n    var day = Math.floor(hour/24);\n    if (current>=24*60*60) {\n        msg.lastupdate = \"Last update \" + day + \" days, \" + hour%24 + \" hours, \" + minute%60 + \" minutes, \" + current%60 + \" seconds ago\";\n    } else if (current>=60*60) {\n        msg.lastupdate = \"Last update \" + hour%24 + \" hours, \" + minute%60 + \" minutes, \" + current%60 + \" seconds ago\";\n    } else if (current>=60) {\n        msg.lastupdate = \"Last update \" + minute%60 + \" minutes, \" + current%60 + \" seconds ago\";\n    } else {\n        msg.lastupdate = \"Last update \" + current%60 + \" seconds ago\";\n    }\n}\n\n\nif (msg.topic===\"update\") {\n    return [null,msg];\n} else {\n    return [msg,msg];\n}\n\n\n",
+        "outputs": "2",
+        "noerr": 0,
+        "x": 687,
+        "y": 536,
+        "wires": [
+            [
+                "1ffdbd22.878f13"
+            ],
+            [
+                "412a485a.1c7188",
+                "87904463.0cff28"
+            ]
+        ]
+    },
+    {
+        "id": "7247cc57.1b4b04",
+        "type": "inject",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "topic": "update",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "x": 145,
+        "y": 527,
+        "wires": [
+            [
+                "da100e1d.ab239"
+            ]
+        ]
+    },
+    {
+        "id": "1ffdbd22.878f13",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "aecfa21b.54e54",
+        "order": 14,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Last Update",
+        "format": "{{msg.formattedtime}}",
+        "layout": "row-spread",
+        "x": 971.0000228881836,
+        "y": 498.99999237060547,
+        "wires": []
+    },
+    {
+        "id": "412a485a.1c7188",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "aecfa21b.54e54",
+        "order": 15,
+        "width": 0,
+        "height": 0,
+        "name": "Seconds since last update",
+        "label": "",
+        "format": "{{msg.lastupdate}}",
+        "layout": "row-spread",
+        "x": 1010,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "436009c0.5c24d8",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "Last Update",
+        "func": "var temp = context.get(\"last_update\");\nvar current = new Date();\n\nif (msg.topic!==\"update\") {\n    \n    if (temp!== undefined && temp!==null) {\n        msg.payload = current.getTime() - temp;\n        context.set(\"last_update\",current.getTime());\n    } else {\n        msg.payload = \"\";\n        context.set(\"last_update\",current.getTime());\n    }    \n    \n    // Update the status with current timestamp\n    var now = new Date();\n    var yyyy = now.getFullYear();\n    var mm = now.getMonth() < 9 ? \"0\" + (now.getMonth() + 1) : (now.getMonth() + 1); // getMonth() is zero-based\n    var dd  = now.getDate() < 10 ? \"0\" + now.getDate() : now.getDate();\n    var hh = now.getHours() < 10 ? \"0\" + now.getHours() : now.getHours();\n    var mmm  = now.getMinutes() < 10 ? \"0\" + now.getMinutes() : now.getMinutes();\n    var ss  = now.getSeconds() < 10 ? \"0\" + now.getSeconds() : now.getSeconds();\n    node.status({fill:\"blue\",shape:\"ring\",text:\"Last update: \"+dd + \".\" + mm + \".\" + yyyy + \" \" + hh + \":\" + mmm + \":\" + ss});\n    \n    msg.formattedtime = dd + \".\" + mm + \".\" + yyyy + \" \" + hh + \":\" + mmm + \":\" + ss;\n}\n\nif (temp!==undefined) {\n    current = current - temp;\n    current = Math.floor(current/1000);\n    msg.secsincelast = current;\n    var minute = Math.floor(current/60);\n    var hour = Math.floor(minute/60);\n    var day = Math.floor(hour/24);\n    if (current>=24*60*60) {\n        msg.lastupdate = \"Last update \" + day + \" days, \" + hour%24 + \" hours, \" + minute%60 + \" minutes, \" + current%60 + \" seconds ago\";\n    } else if (current>=60*60) {\n        msg.lastupdate = \"Last update \" + hour%24 + \" hours, \" + minute%60 + \" minutes, \" + current%60 + \" seconds ago\";\n    } else if (current>=60) {\n        msg.lastupdate = \"Last update \" + minute%60 + \" minutes, \" + current%60 + \" seconds ago\";\n    } else {\n        msg.lastupdate = \"Last update \" + current%60 + \" seconds ago\";\n    }\n}\n\n\nif (msg.topic===\"update\") {\n    return [null,msg];\n} else {\n    return [msg,msg];\n}\n\n\n",
+        "outputs": "2",
+        "noerr": 0,
+        "x": 670,
+        "y": 780,
+        "wires": [
+            [
+                "ce553f59.524ca"
+            ],
+            [
+                "e55af8ce.536828",
+                "69464a67.651204"
+            ]
+        ]
+    },
+    {
+        "id": "c1492977.66ab88",
+        "type": "inject",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "topic": "update",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "x": 130,
+        "y": 780,
+        "wires": [
+            [
+                "436009c0.5c24d8"
+            ]
+        ]
+    },
+    {
+        "id": "ce553f59.524ca",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "8244d0b7.96183",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Last Update",
+        "format": "{{msg.formattedtime}}",
+        "layout": "row-spread",
+        "x": 951.0000228881836,
+        "y": 778.9999923706055,
+        "wires": []
+    },
+    {
+        "id": "e55af8ce.536828",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "8244d0b7.96183",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "name": "Seconds since last update",
+        "label": "",
+        "format": "{{msg.lastupdate}}",
+        "layout": "row-spread",
+        "x": 990,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "b63814c2.253ba8",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "Last Update",
+        "func": "var temp = context.get(\"last_update\");\nvar current = new Date();\n\nif (msg.topic!==\"update\") {\n    \n    if (temp!== undefined && temp!==null) {\n        msg.payload = current.getTime() - temp;\n        context.set(\"last_update\",current.getTime());\n    } else {\n        msg.payload = \"\";\n        context.set(\"last_update\",current.getTime());\n    }    \n    \n    // Update the status with current timestamp\n    var now = new Date();\n    var yyyy = now.getFullYear();\n    var mm = now.getMonth() < 9 ? \"0\" + (now.getMonth() + 1) : (now.getMonth() + 1); // getMonth() is zero-based\n    var dd  = now.getDate() < 10 ? \"0\" + now.getDate() : now.getDate();\n    var hh = now.getHours() < 10 ? \"0\" + now.getHours() : now.getHours();\n    var mmm  = now.getMinutes() < 10 ? \"0\" + now.getMinutes() : now.getMinutes();\n    var ss  = now.getSeconds() < 10 ? \"0\" + now.getSeconds() : now.getSeconds();\n    node.status({fill:\"blue\",shape:\"ring\",text:\"Last update: \"+dd + \".\" + mm + \".\" + yyyy + \" \" + hh + \":\" + mmm + \":\" + ss});\n    \n    msg.formattedtime = dd + \".\" + mm + \".\" + yyyy + \" \" + hh + \":\" + mmm + \":\" + ss;\n}\n\nif (temp!==undefined) {\n    current = current - temp;\n    current = Math.floor(current/1000);\n    msg.secsincelast = current;\n    var minute = Math.floor(current/60);\n    var hour = Math.floor(minute/60);\n    var day = Math.floor(hour/24);\n    if (current>=24*60*60) {\n        msg.lastupdate = \"Last update \" + day + \" days, \" + hour%24 + \" hours, \" + minute%60 + \" minutes, \" + current%60 + \" seconds ago\";\n    } else if (current>=60*60) {\n        msg.lastupdate = \"Last update \" + hour%24 + \" hours, \" + minute%60 + \" minutes, \" + current%60 + \" seconds ago\";\n    } else if (current>=60) {\n        msg.lastupdate = \"Last update \" + minute%60 + \" minutes, \" + current%60 + \" seconds ago\";\n    } else {\n        msg.lastupdate = \"Last update \" + current%60 + \" seconds ago\";\n    }\n}\n\n\nif (msg.topic===\"update\") {\n    return [null,msg];\n} else {\n    return [msg,msg];\n}\n\n\n",
+        "outputs": "2",
+        "noerr": 0,
+        "x": 670,
+        "y": 1040,
+        "wires": [
+            [
+                "96a42fb6.3d996"
+            ],
+            [
+                "b87cd616.13bc68",
+                "95d50588.bdeb68"
+            ]
+        ]
+    },
+    {
+        "id": "ec16f4b1.d6a7f8",
+        "type": "inject",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "topic": "update",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "x": 130,
+        "y": 1040,
+        "wires": [
+            [
+                "b63814c2.253ba8"
+            ]
+        ]
+    },
+    {
+        "id": "96a42fb6.3d996",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "7d47224d.6e4e4c",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Last Update",
+        "format": "{{msg.formattedtime}}",
+        "layout": "row-spread",
+        "x": 950,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "b87cd616.13bc68",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "7d47224d.6e4e4c",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "name": "Seconds since last update",
+        "label": "",
+        "format": "{{msg.lastupdate}}",
+        "layout": "row-spread",
+        "x": 988.9999771118164,
+        "y": 1081.0000076293945,
+        "wires": []
+    },
+    {
+        "id": "eaf14c8b.31b39",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "Last Update",
+        "func": "var temp = context.get(\"last_update\");\nvar current = new Date();\n\nif (msg.topic!==\"update\") {\n    \n    if (temp!== undefined && temp!==null) {\n        msg.payload = current.getTime() - temp;\n        context.set(\"last_update\",current.getTime());\n    } else {\n        msg.payload = \"\";\n        context.set(\"last_update\",current.getTime());\n    }    \n    \n    // Update the status with current timestamp\n    var now = new Date();\n    var yyyy = now.getFullYear();\n    var mm = now.getMonth() < 9 ? \"0\" + (now.getMonth() + 1) : (now.getMonth() + 1); // getMonth() is zero-based\n    var dd  = now.getDate() < 10 ? \"0\" + now.getDate() : now.getDate();\n    var hh = now.getHours() < 10 ? \"0\" + now.getHours() : now.getHours();\n    var mmm  = now.getMinutes() < 10 ? \"0\" + now.getMinutes() : now.getMinutes();\n    var ss  = now.getSeconds() < 10 ? \"0\" + now.getSeconds() : now.getSeconds();\n    node.status({fill:\"blue\",shape:\"ring\",text:\"Last update: \"+dd + \".\" + mm + \".\" + yyyy + \" \" + hh + \":\" + mmm + \":\" + ss});\n    \n    msg.formattedtime = dd + \".\" + mm + \".\" + yyyy + \" \" + hh + \":\" + mmm + \":\" + ss;\n}\n\nif (temp!==undefined) {\n    current = current - temp;\n    current = Math.floor(current/1000);\n    msg.secsincelast = current;\n    var minute = Math.floor(current/60);\n    var hour = Math.floor(minute/60);\n    var day = Math.floor(hour/24);\n    if (current>=24*60*60) {\n        msg.lastupdate = \"Last update \" + day + \" days, \" + hour%24 + \" hours, \" + minute%60 + \" minutes, \" + current%60 + \" seconds ago\";\n    } else if (current>=60*60) {\n        msg.lastupdate = \"Last update \" + hour%24 + \" hours, \" + minute%60 + \" minutes, \" + current%60 + \" seconds ago\";\n    } else if (current>=60) {\n        msg.lastupdate = \"Last update \" + minute%60 + \" minutes, \" + current%60 + \" seconds ago\";\n    } else {\n        msg.lastupdate = \"Last update \" + current%60 + \" seconds ago\";\n    }\n}\n\n\nif (msg.topic===\"update\") {\n    return [null,msg];\n} else {\n    return [msg,msg];\n}\n\n\n",
+        "outputs": "2",
+        "noerr": 0,
+        "x": 670,
+        "y": 1260,
+        "wires": [
+            [
+                "966a52c8.2cd3f"
+            ],
+            [
+                "67d7baf1.bc2254"
+            ]
+        ]
+    },
+    {
+        "id": "a306e0e0.49d67",
+        "type": "inject",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "topic": "update",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "x": 130,
+        "y": 1220,
+        "wires": [
+            [
+                "eaf14c8b.31b39"
+            ]
+        ]
+    },
+    {
+        "id": "966a52c8.2cd3f",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "aab72e16.2987",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Last Update",
+        "format": "{{msg.formattedtime}}",
+        "layout": "row-spread",
+        "x": 950,
+        "y": 1260,
+        "wires": []
+    },
+    {
+        "id": "67d7baf1.bc2254",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "aab72e16.2987",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "Seconds since last update",
+        "label": "",
+        "format": "{{msg.lastupdate}}",
+        "layout": "row-spread",
+        "x": 988.9999771118164,
+        "y": 1301.0000076293945,
+        "wires": []
+    },
+    {
+        "id": "e0a1de8.712d82",
+        "type": "change",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "There is someone at the door",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 920,
+        "y": 1220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e0d52cc2.ca689",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "30 second debounce",
+        "func": "var temp = context.get(\"last_update\");\nvar current = new Date();\n\nif (temp===undefined) {\n    // If this is the first event store time and forward\n    context.set(\"last_update\",current.getTime());\n    return msg;\n} else {\n    if (current.getTime() - temp>30*1000) {\n        // If the time since the last event more than 30 seconds, forward\n        context.set(\"last_update\",current.getTime());\n        return msg;\n    }\n}    \n\n    \n\n",
+        "outputs": "1",
+        "noerr": 0,
+        "x": 700,
+        "y": 1220,
+        "wires": [
+            [
+                "e0a1de8.712d82",
+                "8b4e404.b8eeac"
+            ]
+        ]
+    },
+    {
+        "id": "8b4e404.b8eeac",
+        "type": "link out",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "links": [
+            "64328069.048da",
+            "b44b2f2b.f23be"
+        ],
+        "x": 932.5,
+        "y": 1177.5,
+        "wires": []
+    },
+    {
+        "id": "42a749c0.b38ed8",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "aab72e16.2987",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Name",
+        "format": "{{msg.msg433.name}}",
+        "layout": "row-spread",
+        "x": 650,
+        "y": 1180,
+        "wires": []
+    },
+    {
+        "id": "87904463.0cff28",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "System Diag",
+        "func": "var devicename = \"Maplin_weather_state\";    // This is used as the name of the global variable\nvar devicetext = \"Maplin weather station\";  // This will go into system messages\nvar systemid = 30;                          // ID of the system\n\n// Set a default value\nif (global.get(devicename)===undefined) {\n    global.set(devicename,0);\n}\n\nif (msg.secsincelast<10) {\n    // There is a recent update from the sensor\n    if ((global.get(devicename)!==1)&&(global.get(devicename)!==60)) {\n        global.set(devicename,1);\n        msg.payload = devicetext + \" is up\";\n        msg.system = systemid; // System id, use 1 for Dummy\n        msg.state = 1; // specify if the message is to change system status\n        msg.severity = 0; // 0: information, 1: warning, 2: error\n        node.status({fill:\"green\",shape:\"ring\",text:\"Online\"});\n    }  \n}\n\nif (msg.msg433!==undefined) {\n    if (msg.msg433.BAT!==undefined) {\n        if (msg.msg433.BAT===\"LOW\") {\n            if (global.get(devicename)!==60) {\n                global.set(devicename,60);\n                msg.payload = devicetext + \" battery is low\";\n                msg.system = systemid; // System id, use 1 for Dummy\n                msg.state = 60; // specify if the message is to change system status\n                msg.severity = 1; // 0: information, 1: warning, 2: error\n                node.status({fill:\"yellow\",shape:\"ring\",text:\"Low battery\"});\n            }\n        }                \n        if (msg.msg433.BAT===\"OK\") {\n            if (global.get(devicename)===60) {\n                global.set(devicename,1);\n                msg.payload = devicetext + \" battery is OK\";\n                msg.system = systemid; // System id, use 1 for Dummy\n                msg.state = 1; // specify if the message is to change system status\n                msg.severity = 0; // 0: information, 1: warning, 2: error\n                node.status({fill:\"green\",shape:\"ring\",text:\"Online\"});\n            }\n        }  \n    }\n}\n\nif (msg.secsincelast>10*60) {\n    // There is a recent update from the sensor\n    if (global.get(devicename)!==99) {\n        global.set(devicename,99);\n        msg.payload = devicetext + \" is not transmitting\";\n        msg.system = systemid; // System id, use 1 for Dummy\n        msg.state = 99; // specify if the message is to change system status\n        msg.severity = 1; // 0: information, 1: warning, 2: error\n        node.status({fill:\"grey\",shape:\"ring\",text:\"Offline\"});\n    }  \n}\n\nif (msg.system===systemid) {\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 970,
+        "y": 580,
+        "wires": [
+            [
+                "b269c0da.c140f"
+            ]
+        ]
+    },
+    {
+        "id": "b269c0da.c140f",
+        "type": "link out",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "links": [
+            "13e089a7.73cb46"
+        ],
+        "x": 1155,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "69464a67.651204",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "System Diag",
+        "func": "var devicename = \"Digoo_weather_state\";    // This is used as the name of the global variable\nvar devicetext = \"Digoo weather sensor\";  // This will go into system messages\nvar systemid = 31;                          // ID of the system\n\n// Set a default value\nif (global.get(devicename)===undefined) {\n    global.set(devicename,0);\n}\n\nif (msg.secsincelast<10) {\n    // There is a recent update from the sensor\n    if ((global.get(devicename)!==1)&&(global.get(devicename)!==60)) {\n        global.set(devicename,1);\n        msg.payload = devicetext + \" is up\";\n        msg.system = systemid; // System id, use 1 for Dummy\n        msg.state = 1; // specify if the message is to change system status\n        msg.severity = 0; // 0: information, 1: warning, 2: error\n        node.status({fill:\"green\",shape:\"ring\",text:\"Online\"});\n    }  \n}\n\nif (msg.msg433!==undefined) {\n    if (msg.msg433.BAT!==undefined) {\n        if (msg.msg433.BAT===\"LOW\") {\n            if (global.get(devicename)!==60) {\n                global.set(devicename,60);\n                msg.payload = devicetext + \" battery is low\";\n                msg.system = systemid; // System id, use 1 for Dummy\n                msg.state = 60; // specify if the message is to change system status\n                msg.severity = 1; // 0: information, 1: warning, 2: error\n                node.status({fill:\"yellow\",shape:\"ring\",text:\"Low battery\"});\n            }\n        }                \n        if (msg.msg433.BAT===\"OK\") {\n            if (global.get(devicename)===60) {\n                global.set(devicename,1);\n                msg.payload = devicetext + \" battery is OK\";\n                msg.system = systemid; // System id, use 1 for Dummy\n                msg.state = 1; // specify if the message is to change system status\n                msg.severity = 0; // 0: information, 1: warning, 2: error\n                node.status({fill:\"green\",shape:\"ring\",text:\"Online\"});\n            }\n        }  \n    }\n}\n\nif (msg.secsincelast>10*60) {\n    // There is a recent update from the sensor\n    if (global.get(devicename)!==99) {\n        global.set(devicename,99);\n        msg.payload = devicetext + \" is not transmitting\";\n        msg.system = systemid; // System id, use 1 for Dummy\n        msg.state = 99; // specify if the message is to change system status\n        msg.severity = 1; // 0: information, 1: warning, 2: error\n        node.status({fill:\"grey\",shape:\"ring\",text:\"Offline\"});\n    }  \n}\n\nif (msg.system===systemid) {\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 950,
+        "y": 860,
+        "wires": [
+            [
+                "d9ff35ca.5c6b08"
+            ]
+        ]
+    },
+    {
+        "id": "d9ff35ca.5c6b08",
+        "type": "link out",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "links": [
+            "13e089a7.73cb46"
+        ],
+        "x": 1135,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "95d50588.bdeb68",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "System Diag",
+        "func": "var devicename = \"Digoo_sensor_state\";    // This is used as the name of the global variable\nvar devicetext = \"Digoo temperature sensor\";  // This will go into system messages\nvar systemid = 32;                          // ID of the system\n\n// Set a default value\nif (global.get(devicename)===undefined) {\n    global.set(devicename,0);\n}\n\nif (msg.secsincelast<10) {\n    // There is a recent update from the sensor\n    if ((global.get(devicename)!==1)&&(global.get(devicename)!==60)) {\n        global.set(devicename,1);\n        msg.payload = devicetext + \" is up\";\n        msg.system = systemid; // System id, use 1 for Dummy\n        msg.state = 1; // specify if the message is to change system status\n        msg.severity = 0; // 0: information, 1: warning, 2: error\n        node.status({fill:\"green\",shape:\"ring\",text:\"Online\"});\n    }  \n}\n\nif (msg.msg433!==undefined) {\n    if (msg.msg433.BAT!==undefined) {\n        if (msg.msg433.BAT===\"LOW\") {\n            if (global.get(devicename)!==60) {\n                global.set(devicename,60);\n                msg.payload = devicetext + \" battery is low\";\n                msg.system = systemid; // System id, use 1 for Dummy\n                msg.state = 60; // specify if the message is to change system status\n                msg.severity = 1; // 0: information, 1: warning, 2: error\n                node.status({fill:\"yellow\",shape:\"ring\",text:\"Low battery\"});\n            }\n        }                \n        if (msg.msg433.BAT===\"OK\") {\n            if (global.get(devicename)===60) {\n                global.set(devicename,1);\n                msg.payload = devicetext + \" battery is OK\";\n                msg.system = systemid; // System id, use 1 for Dummy\n                msg.state = 1; // specify if the message is to change system status\n                msg.severity = 0; // 0: information, 1: warning, 2: error\n                node.status({fill:\"green\",shape:\"ring\",text:\"Online\"});\n            }\n        }  \n    }\n}\n\nif (msg.secsincelast>10*60) {\n    // There is a recent update from the sensor\n    if (global.get(devicename)!==99) {\n        global.set(devicename,99);\n        msg.payload = devicetext + \" is not transmitting\";\n        msg.system = systemid; // System id, use 1 for Dummy\n        msg.state = 99; // specify if the message is to change system status\n        msg.severity = 1; // 0: information, 1: warning, 2: error\n        node.status({fill:\"grey\",shape:\"ring\",text:\"Offline\"});\n    }  \n}\n\nif (msg.system===systemid) {\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 950,
+        "y": 1120,
+        "wires": [
+            [
+                "8a2a0dc7.feaf2"
+            ]
+        ]
+    },
+    {
+        "id": "8a2a0dc7.feaf2",
+        "type": "link out",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "links": [
+            "13e089a7.73cb46"
+        ],
+        "x": 1135,
+        "y": 1120,
+        "wires": []
+    },
+    {
+        "id": "593aa2d2.6c940c",
+        "type": "debug",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "complete": "true",
+        "x": 616,
+        "y": 143,
+        "wires": []
+    },
+    {
+        "id": "40edd7a2.b45f18",
+        "type": "mqtt in",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "topic": "RFLINK_REC/#",
+        "qos": "0",
+        "broker": "9de12bd0.1702d8",
+        "x": 85,
+        "y": 84,
+        "wires": [
+            [
+                "29704e81.221152",
+                "90fc5db3.57808"
+            ]
+        ]
+    },
+    {
+        "id": "ee3698b8.4a3348",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "WINDIR conversion",
+        "func": "if (msg.msg433.WINDIR!==undefined) {\n    msg.msg433.WINDIR  = parseInt(msg.msg433.WINDIR , 10) * 22.5;\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 2007,
+        "y": 95,
+        "wires": [
+            [
+                "9dba5429.870d18"
+            ]
+        ]
+    },
+    {
+        "id": "94da8583.fbb448",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "aecfa21b.54e54",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Wind Direction",
+        "format": "{{msg.msg433.WINDIR}} Deg",
+        "layout": "row-spread",
+        "x": 696,
+        "y": 443,
+        "wires": []
+    },
+    {
+        "id": "a51b3d86.29f31",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "Rain metering",
+        "func": "var global_name = \"rainstat\";   // Name of the global variable\nvar hourlysize = 24;            // Number of hourly stat to collect (24 for the last 24 hours)\nvar dailysize = 10;             // Number of daily stat to collect\nvar weeklysize = 10;             // Number of weekly stat to collect\nvar current = new Date();\n\nvar rainstat = global.get(global_name);\nif (rainstat===undefined) {\n    rainstat = {};\n}\n\n// If the message is coming from sensor, save the current value\nif (msg.topic===\"rflink\") {\n    if (msg.msg433.RAIN!==undefined) {\n        context.set(\"RAIN\",msg.msg433.RAIN);\n        msg.topic=\"reading\";\n    }\n}\n\n// Do not process stats until we have a valid reading\nif (context.get(\"RAIN\")!==undefined) {\n\n    // Update the hourly stats\n    if (msg.topic===\"hourly\") {\n        msg.topic=\"hourly\";\n        // First update the historical readings\n        if (rainstat.hourlyvalues===undefined) {\n            // this is the first reading, create the array first\n            rainstat.hourlyvalues = [];\n            rainstat.hourlyvalues.push({epoch: current.getTime(), reading:context.get(\"RAIN\")});\n        } else {\n            if (rainstat.hourlyvalues.length<hourlysize-1) {\n                // there is not enough history collected yet, add to the array\n                rainstat.hourlyvalues.push({epoch: current.getTime(), reading:context.get(\"RAIN\")});\n            } else {\n                // the array is full need to shift values\n                for (var i=1;i<rainstat.hourlyvalues.length;i++) {\n                    rainstat.hourlyvalues[i-1]=rainstat.hourlyvalues[i];\n                }\n                // add the current value to the end of the array\n                rainstat.hourlyvalues[hourlysize-1]={epoch: current.getTime(), reading:context.get(\"RAIN\")};\n            }\n        }\n        \n        // Calculate the delta values\n        rainstat.hourlydelta = [];\n        if (rainstat.hourlyvalues.length>1) {\n            // We need at least two readings\n            for (var i=1;i<rainstat.hourlyvalues.length;i++) {\n                var delta = Math.round((rainstat.hourlyvalues[i].reading - rainstat.hourlyvalues[i-1].reading)*10)/10;\n                if (delta<0) {\n                    // If for any reason readings from the sensor reset use delta as zero instead of a high negative value\n                    delta = 0;\n                }\n                rainstat.hourlydelta.push({epoch: rainstat.hourlyvalues[i].epoch, delta:delta});\n            }\n        }\n        \n    }\n   \n    // Update the daily stats\n    if (msg.topic===\"daily\") {\n        msg.topic=\"daily\";\n        // First update the historical readings\n        if (rainstat.dailyvalues===undefined) {\n            // this is the first reading, create the array first\n            rainstat.dailyvalues = [];\n            rainstat.dailyvalues.push({epoch: current.getTime(), reading:context.get(\"RAIN\")});\n        } else {\n            if (rainstat.dailyvalues.length<dailysize-1) {\n                // there is not enough history collected yet, add to the array\n                rainstat.dailyvalues.push({epoch: current.getTime(), reading:context.get(\"RAIN\")});\n            } else {\n                // the array is full need to shift values\n                for (var i=1;i<rainstat.dailyvalues.length;i++) {\n                    rainstat.dailyvalues[i-1]=rainstat.dailyvalues[i];\n                }\n                // add the current value to the end of the array\n                rainstat.dailyvalues[dailysize-1]={epoch: current.getTime(), reading:context.get(\"RAIN\")};\n            }\n        }\n        \n        // Calculate the delta values\n        rainstat.dailydelta = [];\n        if (rainstat.dailyvalues.length>1) {\n            // We need at least two readings\n            for (var i=1;i<rainstat.dailyvalues.length;i++) {\n                var delta = Math.round((rainstat.dailyvalues[i].reading - rainstat.dailyvalues[i-1].reading)*10)/10;\n                if (delta<0) {\n                    // If for any reason readings from the sensor reset use delta as zero instead of a high negative value\n                    delta = 0;\n                }\n                rainstat.dailydelta.push({epoch: rainstat.dailyvalues[i].epoch, delta:delta});\n            }\n        }\n        \n    }\n    \n    // Update the weekly stats\n    if (msg.topic===\"weekly\") {\n        msg.topic=\"weekly\";\n        // First update the historical readings\n        if (rainstat.weeklyvalues===undefined) {\n            // this is the first reading, create the array first\n            rainstat.weeklyvalues = [];\n            rainstat.weeklyvalues.push({epoch: current.getTime(), reading:context.get(\"RAIN\")});\n        } else {\n            if (rainstat.weeklyvalues.length<weeklysize-1) {\n                // there is not enough history collected yet, add to the array\n                rainstat.weeklyvalues.push({epoch: current.getTime(), reading:context.get(\"RAIN\")});\n            } else {\n                // the array is full need to shift values\n                for (var i=1;i<rainstat.weeklyvalues.length;i++) {\n                    rainstat.weeklyvalues[i-1]=rainstat.weeklyvalues[i];\n                }\n                // add the current value to the end of the array\n                rainstat.weeklyvalues[weeklysize-1]={epoch: current.getTime(), reading:context.get(\"RAIN\")};\n            }\n        }\n        \n        // Calculate the delta values\n        rainstat.weeklydelta = [];\n        if (rainstat.weeklyvalues.length>1) {\n            // We need at least two readings\n            for (var i=1;i<rainstat.weeklyvalues.length;i++) {\n                var delta = Math.round((rainstat.weeklyvalues[i].reading - rainstat.weeklyvalues[i-1].reading)*10)/10;\n                if (delta<0) {\n                    // If for any reason readings from the sensor reset use delta as zero instead of a high negative value\n                    delta = 0;\n                }\n                rainstat.weeklydelta.push({epoch: rainstat.weeklyvalues[i].epoch, delta:delta});\n            }\n        }\n        \n    }\n\n\n    // This week rainfall calculation\n    if (rainstat.weeklyvalues!==undefined) {\n        if (rainstat.weeklyvalues.length>0) {\n            rainstat.thisweek = Math.round((context.get(\"RAIN\") - rainstat.weeklyvalues[rainstat.weeklyvalues.length-1].reading)*10)/10;\n            if (rainstat.thisweek<0) {\n                rainstat.thisweek = 0.0;\n            }\n        } else {\n            rainstat.thisweek = 0.0;\n        }\n    }\n    // Today rainfall calculation\n    if (rainstat.dailyvalues!==undefined) {\n        if (rainstat.dailyvalues.length>0) {\n            rainstat.today = Math.round((context.get(\"RAIN\") - rainstat.dailyvalues[rainstat.dailyvalues.length-1].reading)*10)/10;\n            if (rainstat.today<0) {\n                rainstat.today = 0.0;\n            }\n        } else {\n            rainstat.today = 0.0;\n        }\n    }\n    // This hour rainfall calculation\n    if (rainstat.hourlyvalues!==undefined) {\n        if (rainstat.hourlyvalues.length>0) {\n            rainstat.thishour = Math.round((context.get(\"RAIN\") - rainstat.hourlyvalues[rainstat.hourlyvalues.length-1].reading)*10)/10;\n            if (rainstat.thishour<0) {\n                rainstat.thishour = 0.0;\n            }\n        } else {\n            rainstat.thishour = 0.0;\n        }\n    }        \n    \n    // Store the updates\n    global.set(global_name,rainstat);\n    msg.payload = rainstat;\n    node.status({fill:\"blue\",shape:\"ring\",text:msg.topic+\" performed\"+rainstat.thishour});\n    return msg;\n} else {\n    node.status({fill:\"red\",shape:\"ring\",text:\"No reading\"+rainstat.thishour});\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1221.01953125,
+        "y": 242.00390625,
+        "wires": [
+            [
+                "39d79c60.444864",
+                "de148b3f.e17628"
+            ]
+        ]
+    },
+    {
+        "id": "b0db2ab5.880898",
+        "type": "inject",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "topic": "hourly",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "3600",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "x": 971.01953125,
+        "y": 302.00390625,
+        "wires": [
+            [
+                "a51b3d86.29f31"
+            ]
+        ]
+    },
+    {
+        "id": "39d79c60.444864",
+        "type": "debug",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "active": false,
+        "console": "false",
+        "complete": "false",
+        "x": 1451.01953125,
+        "y": 242.00390625,
+        "wires": []
+    },
+    {
+        "id": "9077e212.c3e4d",
+        "type": "inject",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 1781.01953125,
+        "y": 822.00390625,
+        "wires": [
+            [
+                "5e2cb82d.525298"
+            ]
+        ]
+    },
+    {
+        "id": "5e2cb82d.525298",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "Delete history",
+        "func": "var rainstat = {};\nglobal.set(\"rainstat\",rainstat);\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1981.01953125,
+        "y": 822.00390625,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d27cebfc.ffdee8",
+        "type": "inject",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "topic": "daily",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "01 00 * * *",
+        "once": false,
+        "onceDelay": "",
+        "x": 971.01953125,
+        "y": 342.00390625,
+        "wires": [
+            [
+                "a51b3d86.29f31"
+            ]
+        ]
+    },
+    {
+        "id": "24862d61.7ce1e2",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "Generate hourly graph",
+        "func": "//msg.payload = global.get(\"rainstat\");  //uncomment this for debugging\n// Skeleton data structure for the bar graph\nvar m={\n    \"series\":[\"Hourly rainfall\"],\n    \"data\":[[]],\n    \"labels\":[]\n};\n\n// Transform the data\nif (msg.payload.hourlydelta!==undefined) {\n    if (msg.payload.hourlydelta.length>0) {\n        for (var i=0;i<msg.payload.hourlydelta.length;i++) {\n            m.data[0].push(msg.payload.hourlydelta[i].delta);\n            var d = new Date();\n            d.setTime(msg.payload.hourlydelta[i].epoch-1000*60*60);\n            var d2 = new Date();\n            d2.setTime(msg.payload.hourlydelta[i].epoch);\n            m.labels.push(d.getHours()+\"-\"+d2.getHours());\n        }\n    }\n}\n\n\nreturn {payload:[m]};\n\n/* sample data\n\nvar m={\n    \"series\":[\"Daily rainfall\"],\n    \"data\":[[5,3,6]],\n    \"labels\":[\"D-3\",\"D-2\",\"D-1\"]\n};\n\n*/",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1761.01953125,
+        "y": 402.00390625,
+        "wires": [
+            [
+                "d14c4e31.1b6c1"
+            ]
+        ]
+    },
+    {
+        "id": "1b68ed6e.7571b3",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "Generate daily graph",
+        "func": "function getGetOrdinal(n) {\n    var s=[\"th\",\"st\",\"nd\",\"rd\"],\n    v=n%100;\n    return n+(s[(v-20)%10]||s[v]||s[0]);\n }\n\nvar dL = [\"Sunday\", \"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\"];\nvar dS = [\"Sun\", \"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\", \"Sat\"];\n//msg.payload = global.get(\"rainstat\"); // uncomment this line if you want to debug\n// Skeleton data structure for the bar graph\nvar m={\n    \"series\":[\"Daily rainfall\"],\n    \"data\":[[]],\n    \"labels\":[]\n};\n\n// Transform the data\nif (msg.payload.dailydelta!==undefined) {\n    if (msg.payload.dailydelta.length>0) {\n        for (var i=0;i<msg.payload.dailydelta.length;i++) {\n            m.data[0].push(msg.payload.dailydelta[i].delta);\n            var d = new Date();\n            d.setTime(msg.payload.dailydelta[i].epoch-1000*60*60*24);\n            m.labels.push(dL[d.getDay()]+\", \"+getGetOrdinal(d.getDate()));\n        }\n    }\n}\n\n\nreturn {payload:[m]};\n\n/* sample data\n\nvar m={\n    \"series\":[\"Daily rainfall\"],\n    \"data\":[[5,3,6]],\n    \"labels\":[\"D-3\",\"D-2\",\"D-1\"]\n};\n\n*/",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1761.01953125,
+        "y": 542.00390625,
+        "wires": [
+            [
+                "91281ae2.16dec8"
+            ]
+        ]
+    },
+    {
+        "id": "91281ae2.16dec8",
+        "type": "ui_chart",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "group": "aecfa21b.54e54",
+        "order": 10,
+        "width": 0,
+        "height": 0,
+        "label": "Daily rainfall [mm]",
+        "chartType": "bar",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "no data",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": true,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 2071.01953125,
+        "y": 582.00390625,
+        "wires": [
+            [
+                "6c840935.d36ed8"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "8a0a25a0.461228",
+        "type": "inject",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 1461.01953125,
+        "y": 542.00390625,
+        "wires": [
+            [
+                "1b68ed6e.7571b3"
+            ]
+        ]
+    },
+    {
+        "id": "d14c4e31.1b6c1",
+        "type": "ui_chart",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "group": "aecfa21b.54e54",
+        "order": 8,
+        "width": 0,
+        "height": 0,
+        "label": "Hourly rainfall [mm]",
+        "chartType": "bar",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "no data",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": true,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 2071.01953125,
+        "y": 442.00390625,
+        "wires": [
+            [
+                "cc47dbef.b4b3f8"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "f474e63.440e218",
+        "type": "inject",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 1461.01953125,
+        "y": 402.00390625,
+        "wires": [
+            [
+                "24862d61.7ce1e2"
+            ]
+        ]
+    },
+    {
+        "id": "de148b3f.e17628",
+        "type": "switch",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "reading",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "hourly",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "daily",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "weekly",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 4,
+        "x": 1451.01953125,
+        "y": 302.00390625,
+        "wires": [
+            [
+                "3325593b.3baa66",
+                "419bda4.579be24",
+                "e4d551e4.ba3b5"
+            ],
+            [
+                "24862d61.7ce1e2",
+                "f19fd339.6a6f9",
+                "d7fc47f0.039858"
+            ],
+            [
+                "1b68ed6e.7571b3",
+                "e551f33a.44af1"
+            ],
+            [
+                "3e53073b.3bafc8",
+                "87c0889e.4372f8"
+            ]
+        ]
+    },
+    {
+        "id": "3325593b.3baa66",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "aecfa21b.54e54",
+        "order": 7,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "This hour's rainfall",
+        "format": "{{msg.payload.thishour}} mm",
+        "layout": "row-spread",
+        "x": 1911.01953125,
+        "y": 222.00390625,
+        "wires": []
+    },
+    {
+        "id": "419bda4.579be24",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "aecfa21b.54e54",
+        "order": 9,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Today's rainfall",
+        "format": "{{msg.payload.today}} mm",
+        "layout": "row-spread",
+        "x": 1901.01953125,
+        "y": 262.00390625,
+        "wires": []
+    },
+    {
+        "id": "2c9eeac2.04abd6",
+        "type": "inject",
+        "z": "2cc0068.98f53fa",
+        "name": "Startup",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "x": 1541.01953125,
+        "y": 442.00390625,
+        "wires": [
+            [
+                "70846c2e.7bd4b4"
+            ]
+        ]
+    },
+    {
+        "id": "70846c2e.7bd4b4",
+        "type": "file in",
+        "z": "2cc0068.98f53fa",
+        "name": "Chart dump",
+        "filename": "/home/pi/charts/hourly_rainfall.dump",
+        "format": "utf8",
+        "sendError": true,
+        "x": 1711.01953125,
+        "y": 442.00390625,
+        "wires": [
+            [
+                "4e1549a5.d57918"
+            ]
+        ]
+    },
+    {
+        "id": "4e1549a5.d57918",
+        "type": "json",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "x": 1871.01953125,
+        "y": 442.00390625,
+        "wires": [
+            [
+                "d14c4e31.1b6c1"
+            ]
+        ]
+    },
+    {
+        "id": "cc47dbef.b4b3f8",
+        "type": "file",
+        "z": "2cc0068.98f53fa",
+        "name": "Chart dump",
+        "filename": "/home/pi/charts/hourly_rainfall.dump",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "x": 2280.01953125,
+        "y": 443.00390625,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "70d943ef.0053bc",
+        "type": "inject",
+        "z": "2cc0068.98f53fa",
+        "name": "Startup",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "x": 1541.01953125,
+        "y": 582.00390625,
+        "wires": [
+            [
+                "90d1730.30b059"
+            ]
+        ]
+    },
+    {
+        "id": "90d1730.30b059",
+        "type": "file in",
+        "z": "2cc0068.98f53fa",
+        "name": "Chart dump",
+        "filename": "/home/pi/charts/daily_rainfall.dump",
+        "format": "utf8",
+        "sendError": true,
+        "x": 1711.01953125,
+        "y": 582.00390625,
+        "wires": [
+            [
+                "19163901.2b70b7"
+            ]
+        ]
+    },
+    {
+        "id": "19163901.2b70b7",
+        "type": "json",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "x": 1871.01953125,
+        "y": 582.00390625,
+        "wires": [
+            [
+                "91281ae2.16dec8"
+            ]
+        ]
+    },
+    {
+        "id": "6c840935.d36ed8",
+        "type": "file",
+        "z": "2cc0068.98f53fa",
+        "name": "Chart dump",
+        "filename": "/home/pi/charts/daily_rainfall.dump",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "x": 2280.01953125,
+        "y": 583.00390625,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f19fd339.6a6f9",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "Hourly SQL Update",
+        "func": "// This logic prevents multiple zero (delta) readings being stored in the database\n// if the (delta) reading is zero and the previous was zero as well, it will not be stored\nvar delta = msg.payload.hourlydelta[msg.payload.hourlydelta.length-1].delta;\nvar store = true;\nif (delta===0) {\n    if (context.get(\"last\")!==undefined) {\n        if (context.get(\"last\")===0) {\n            store = false;\n        }\n    }\n} \n\nif (store) {\n    context.set(\"last\", delta);\n    msg.topic=\"INSERT OR REPLACE INTO sensor_aggr (epoch,device,sensor,value) VALUES(\"+msg.payload.hourlydelta[msg.payload.hourlydelta.length-1].epoch+\",'maplin','rain_hourly',\"+delta+\");\";\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1751.01953125,
+        "y": 362.00390625,
+        "wires": [
+            [
+                "bce10962.9bb4f8",
+                "152bc79c.d0a898"
+            ]
+        ]
+    },
+    {
+        "id": "e551f33a.44af1",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "Daily SQL Update",
+        "func": "msg.topic=\"INSERT OR REPLACE INTO sensor_aggr (epoch,device,sensor,value) VALUES(\"+msg.payload.dailydelta[msg.payload.dailydelta.length-1].epoch+\",'maplin','rain_daily',\"+msg.payload.dailydelta[msg.payload.dailydelta.length-1].delta+\");\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1751.01953125,
+        "y": 502.00390625,
+        "wires": [
+            [
+                "72749e3c.8f697"
+            ]
+        ]
+    },
+    {
+        "id": "e4d551e4.ba3b5",
+        "type": "ui_text",
+        "z": "2cc0068.98f53fa",
+        "group": "aecfa21b.54e54",
+        "order": 11,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "This week's rainfall",
+        "format": "{{msg.payload.thisweek}} mm",
+        "layout": "row-spread",
+        "x": 1911.01953125,
+        "y": 302.00390625,
+        "wires": []
+    },
+    {
+        "id": "87c0889e.4372f8",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "Generate weekly graph",
+        "func": "function getGetOrdinal(n) {\n    var s=[\"th\",\"st\",\"nd\",\"rd\"],\n    v=n%100;\n    return n+(s[(v-20)%10]||s[v]||s[0]);\n }\n\nvar mL = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];\nvar mS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];\n//msg.payload = global.get(\"rainstat\");  // uncomment this line for debugging\n// Skeleton data structure for the bar graph\nvar m={\n    \"series\":[\"Weekly rainfall\"],\n    \"data\":[[]],\n    \"labels\":[]\n};\n\n// Transform the data\nif (msg.payload.weeklydelta!==undefined) {\n    if (msg.payload.weeklydelta.length>0) {\n        for (var i=0;i<msg.payload.weeklydelta.length;i++) {\n            m.data[0].push(msg.payload.weeklydelta[i].delta);\n            var d = new Date();\n            d.setTime(msg.payload.weeklydelta[i].epoch-1000*60*60*24*7);\n            m.labels.push(\"w/c \"+getGetOrdinal(d.getDate())+\" of \"+mL[d.getMonth()]);\n        }\n    }\n}\n\n\nreturn {payload:[m]};\n\n/* sample data\n\nvar m={\n    \"series\":[\"Daily rainfall\"],\n    \"data\":[[5,3,6]],\n    \"labels\":[\"D-3\",\"D-2\",\"D-1\"]\n};\n\n*/",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1771.01953125,
+        "y": 682.00390625,
+        "wires": [
+            [
+                "6585a287.2f0f8c"
+            ]
+        ]
+    },
+    {
+        "id": "6585a287.2f0f8c",
+        "type": "ui_chart",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "group": "aecfa21b.54e54",
+        "order": 12,
+        "width": 0,
+        "height": 0,
+        "label": "Weekly rainfall [mm]",
+        "chartType": "bar",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "no data",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": true,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 2066.0195922851562,
+        "y": 713.0040187835693,
+        "wires": [
+            [
+                "89be0738.5f8e08"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "acd121e6.c7a2e",
+        "type": "inject",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "x": 1461.01953125,
+        "y": 682.00390625,
+        "wires": [
+            [
+                "87c0889e.4372f8"
+            ]
+        ]
+    },
+    {
+        "id": "f345009f.037e1",
+        "type": "inject",
+        "z": "2cc0068.98f53fa",
+        "name": "Startup",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "x": 1541.01953125,
+        "y": 722.00390625,
+        "wires": [
+            [
+                "880f4188.9efb8"
+            ]
+        ]
+    },
+    {
+        "id": "880f4188.9efb8",
+        "type": "file in",
+        "z": "2cc0068.98f53fa",
+        "name": "Chart dump",
+        "filename": "/home/pi/charts/weekly_rainfall.dump",
+        "format": "utf8",
+        "sendError": true,
+        "x": 1711.01953125,
+        "y": 722.00390625,
+        "wires": [
+            [
+                "ac034c30.14e08"
+            ]
+        ]
+    },
+    {
+        "id": "ac034c30.14e08",
+        "type": "json",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "x": 1871.01953125,
+        "y": 722.00390625,
+        "wires": [
+            [
+                "6585a287.2f0f8c"
+            ]
+        ]
+    },
+    {
+        "id": "89be0738.5f8e08",
+        "type": "file",
+        "z": "2cc0068.98f53fa",
+        "name": "Chart dump",
+        "filename": "/home/pi/charts/weekly_rainfall.dump",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "x": 2280.01953125,
+        "y": 723.00390625,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3e53073b.3bafc8",
+        "type": "function",
+        "z": "2cc0068.98f53fa",
+        "name": "Weekly SQL Update",
+        "func": "msg.topic=\"INSERT OR REPLACE INTO sensor_aggr (epoch,device,sensor,value) VALUES(\"+msg.payload.weeklydelta[msg.payload.weeklydelta.length-1].epoch+\",'maplin','rain_weekly',\"+msg.payload.weeklydelta[msg.payload.weeklydelta.length-1].delta+\");\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1761.01953125,
+        "y": 642.00390625,
+        "wires": [
+            [
+                "2e1ff329.89304c"
+            ]
+        ]
+    },
+    {
+        "id": "293df8f9.9992f8",
+        "type": "inject",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "topic": "weekly",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "02 00 * * 1",
+        "once": false,
+        "onceDelay": "",
+        "x": 971.01953125,
+        "y": 382.00390625,
+        "wires": [
+            [
+                "a51b3d86.29f31"
+            ]
+        ]
+    },
+    {
+        "id": "bce10962.9bb4f8",
+        "type": "sqlite",
+        "z": "2cc0068.98f53fa",
+        "mydb": "fb7410c7.3107e",
+        "sql": "",
+        "name": "Node Red DB",
+        "x": 1981.01953125,
+        "y": 362.00390625,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "72749e3c.8f697",
+        "type": "sqlite",
+        "z": "2cc0068.98f53fa",
+        "mydb": "fb7410c7.3107e",
+        "name": "Node Red DB",
+        "x": 1981.01953125,
+        "y": 502.00390625,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2e1ff329.89304c",
+        "type": "sqlite",
+        "z": "2cc0068.98f53fa",
+        "mydb": "fb7410c7.3107e",
+        "name": "Node Red DB",
+        "x": 1981.01953125,
+        "y": 642.00390625,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a350a968.fc9258",
+        "type": "inject",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "topic": "",
+        "payload": "rainstat",
+        "payloadType": "global",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 1771.01953125,
+        "y": 882.00390625,
+        "wires": [
+            [
+                "7470e806.f68578"
+            ]
+        ]
+    },
+    {
+        "id": "7470e806.f68578",
+        "type": "debug",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 1971.01953125,
+        "y": 882.00390625,
+        "wires": []
+    },
+    {
+        "id": "152bc79c.d0a898",
+        "type": "debug",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 2292.89453125,
+        "y": 517.6796875,
+        "wires": []
+    },
+    {
+        "id": "d7fc47f0.039858",
+        "type": "debug",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 2250.39453125,
+        "y": 346.68359375,
+        "wires": []
+    },
+    {
+        "id": "4b4b598c.dc9408",
+        "type": "debug",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 922.89453125,
+        "y": 197.6796875,
+        "wires": []
+    },
+    {
+        "id": "a2f0d98c.420d78",
+        "type": "change",
+        "z": "2cc0068.98f53fa",
+        "name": "Set Topic",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "rflink",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 2737.632827758789,
+        "y": 91.3047103881836,
+        "wires": [
+            [
+                "d532090.3c610f8",
+                "85fb8e77.7ac45"
+            ]
+        ]
+    },
+    {
+        "id": "9e2eef98.19d65",
+        "type": "debug",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 734.882833480835,
+        "y": 1735.6797580718994,
+        "wires": []
+    },
+    {
+        "id": "2d2d579a.ede968",
+        "type": "openweathermap",
+        "z": "2cc0068.98f53fa",
+        "name": "Lausen",
+        "wtype": "forecast",
+        "lon": "",
+        "lat": "",
+        "city": "Lausen",
+        "country": "Switzerland",
+        "language": "en",
+        "x": 467.8984375,
+        "y": 1737.0742893218994,
+        "wires": [
+            [
+                "9e2eef98.19d65"
+            ]
+        ]
+    },
+    {
+        "id": "c46f4c15.b8438",
+        "type": "inject",
+        "z": "2cc0068.98f53fa",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "3600",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 112.89453125,
+        "y": 1739.69140625,
+        "wires": [
+            [
+                "2d2d579a.ede968"
+            ]
+        ]
+    },
+    {
+        "id": "aecfa21b.54e54",
+        "type": "ui_group",
+        "z": "",
+        "name": "Weather Station",
+        "tab": "e77346dc.1821e8",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "8244d0b7.96183",
+        "type": "ui_group",
+        "z": "",
+        "name": "Digoo RS8 Sensor",
+        "tab": "e77346dc.1821e8",
+        "order": 2,
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "7d47224d.6e4e4c",
+        "type": "ui_group",
+        "z": "",
+        "name": "Digoo Weather Station",
+        "tab": "e77346dc.1821e8",
+        "order": 3,
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "32201797.8d2168",
+        "type": "ui_group",
+        "z": "",
+        "name": "New Devices",
+        "tab": "e77346dc.1821e8",
+        "order": 5,
+        "disp": true,
+        "width": "18"
+    },
+    {
+        "id": "aab72e16.2987",
+        "type": "ui_group",
+        "z": "",
+        "name": "Door Bell",
+        "tab": "e77346dc.1821e8",
+        "order": 4,
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "9de12bd0.1702d8",
+        "type": "mqtt-broker",
+        "z": "",
+        "broker": "192.168.0.203",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "fb7410c7.3107e",
+        "type": "sqlitedb",
+        "z": "",
+        "db": "/home/pi/dbs/nodered",
+        "mode": "RW"
+    },
+    {
+        "id": "e77346dc.1821e8",
+        "type": "ui_tab",
+        "z": "",
+        "name": "RFLink",
+        "icon": "settings_remote",
+        "order": 19
+    }
+]

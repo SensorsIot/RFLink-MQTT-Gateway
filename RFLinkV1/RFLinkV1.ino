@@ -30,7 +30,7 @@
 // Update these with values suitable for your network.
 
 const char* ssid = mySSID;
-const char* password = myPASWORD;
+const char* password = myPASSWORD;
 const char* mqtt_server = "192.168.0.203";
 const char* MQTT_USER = "admin";
 const char* MQTT_PASSWORD = "admin";
@@ -90,7 +90,7 @@ void reconnect() {
     String clientId = "ESP8266Client-";
     clientId += String(random(0xffff), HEX);
     // Attempt to connect
-    if (client.connect(clientId.c_str()), MQTT_USER, MQTT_PASSWORD) {
+    if (client.connect(clientId.c_str(), MQTT_USER, MQTT_PASSWORD)) {
       //Serial.println("connected");
       // Once connected, publish an announcement...
       client.publish(MQTT_TOPIC_REC, "hello world");

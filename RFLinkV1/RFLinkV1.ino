@@ -55,6 +55,13 @@ void setup_wifi() {
   //Serial.print("Connecting to ");
   //Serial.println(ssid);
 
+  WiFi.persistent(false);
+  WiFi.setAutoReconnect(true);
+  WiFi.setSleepMode(WIFI_MODEM_SLEEP); // Default is WIFI_NONE_SLEEP
+  // WiFi.setOutputPower(10); // 0~20.5dBm, Default max 
+
+  WiFi.mode(WIFI_STA);
+  // WiFi.config(ip, gateway, subnet); // For Static IP
   WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED) {
@@ -74,7 +81,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
   //Serial.print("Message arrived [");
   //Serial.print(topic);
   //Serial.print("] ");
-  for (int i = 0; i < length; i++) {
+  for (unsigned int i = 0; i < length; i++) {
     Serial.write(payload[i]);
   }
   Serial.write('\n');
@@ -101,7 +108,7 @@ void reconnect() {
       //Serial.print(client.state());
       //Serial.println(" try again in 5 seconds");
       // Wait 5 seconds before retrying
-      delay(5000);
+      for (byte i=0; i<10; i++) delay(500); // delay(5000) may cause hang
     }
   }
 }
@@ -124,7 +131,7 @@ void loop() {
     delay(1);
     dataAvailable = true;
   }
-
+  delay(1); // To Enable some more Modem Sleep
 
   if (!client.connected()) {
     reconnect();
